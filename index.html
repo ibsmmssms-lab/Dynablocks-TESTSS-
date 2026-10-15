@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>DynaBlocks Beta (por fãs)</title>
+    <style>
+        :root {
+            --bg: #fff;
+            --fg: #000;
+            --bar: #ece9d8;
+            color-scheme: light dark;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        html {
+            scroll-padding-top: env(safe-area-inset-top, 0px)
+        }
+
+        @media(prefers-color-scheme:dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #fff;
+                --fg: #000
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #fff;
+            --fg: #000
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--fg);
+            font: 11px Verdana, Tahoma, sans-serif;
+            letter-spacing: .2px;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='20'><path d='M1 1v14l4-4 3 7 3-1-3-7h5z' fill='white' stroke='black'/></svg>") 1 1, default
+        }
+
+        a {
+            color: #000;
+            cursor: pointer
+        }
+
+        a:hover {
+            color: #c00
+        }
+
+        #home,
+        #list {
+            padding: 20px 10px;
+            overflow-x: auto
+        }
+
+        .logo {
+            text-align: center;
+            font: bold 40px Verdana, sans-serif;
+            letter-spacing: 2px;
+            margin: 6px 0 18px
+        }
+
+        .logo small {
+            font: normal 16px Verdana;
+            color: #888;
+            letter-spacing: 0
+        }
+
+        .cols {
+            display: flex;
+            gap: 28px;
+            justify-content: center;
+            min-width: 720px
+        }
+
+        .c h4 {
+            margin: 0 0 6px;
+            font-size: 13px;
+            font-weight: normal;
+            font-family: Verdana
+        }
+
+        .c h4 a,
+        .c h4 {
+            font-weight: bold
+        }
+
+        .c div {
+            margin: 2px 0
+        }
+
+        .c section {
+            margin-bottom: 22px
+        }
+
+        .card {
+            width: 150px;
+            text-align: center;
+            font: italic 11px 'Times New Roman', serif;
+            margin-bottom: 14px
+        }
+
+        .th {
+            height: 100px;
+            border: 1px solid #888
+        }
+
+        .foot {
+            text-align: center;
+            margin-top: 20px
+        }
+
+        .foot a {
+            margin: 0 8px
+        }
+
+        .foot i {
+            display: block;
+            margin-top: 6px;
+            font: italic 11px 'Times New Roman', serif
+        }
+
+        #studio {
+            display: none;
+            height: 100vh;
+            height: 100dvh;
+            flex-direction: column;
+            background: var(--bar)
+        }
+
+        .tb {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            padding: 3px;
+            border-bottom: 1px solid #888;
+            background: var(--bar);
+            color: #000
+        }
+
+        .tb button,
+        .tb select {
+            font: 11px Tahoma, sans-serif;
+            padding: 2px 5px;
+            border: 1px solid #888;
+            background: #f6f4e8;
+            color: #000;
+            cursor: pointer
+        }
+
+        .sw {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #000;
+            display: inline-block;
+            cursor: pointer
+        }
+
+        #wrap {
+            flex: 1;
+            position: relative;
+            min-height: 0
+        }
+
+        #cv {
+            width: 100%;
+            height: 100%;
+            display: block
+        }
+
+        #st {
+            padding: 2px 6px;
+            background: var(--bar);
+            color: #000;
+            border-top: 1px solid #888
+        }
+
+        *,
+        a {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><g transform='translate(18,18) rotate(-45)'><path d='M0-16L-11-4H-4V15H4V-4H11Z' fill='white' stroke='black' stroke-width='2' stroke-linejoin='round'/></g></svg>") 7 7, default
+        }
+
+        #studio {
+            display: none;
+            position: relative;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            background: #9cc4e4;
+            font: 10px Verdana, sans-serif;
+            user-select: none
+        }
+
+        #cv {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: calc(100% - 38px);
+            image-rendering: pixelated;
+            image-rendering: crisp-edges
+        }
+
+        .pn {
+            position: absolute;
+            background: rgba(125, 125, 125, .9);
+            color: #fff;
+            text-align: center;
+            font: 9px Verdana
+        }
+
+        #lp {
+            left: 0;
+            top: 10px;
+            width: 58px;
+            padding: 5px 0;
+            max-height: calc(100% - 60px);
+            overflow: auto
+        }
+
+        .go {
+            display: block;
+            margin: 3px auto;
+            width: 42px;
+            height: 26px;
+            border: 2px solid #fff;
+            border-radius: 13px;
+            background: #1db81d;
+            color: #fff;
+            font: bold 12px Verdana
+        }
+
+        .go.st {
+            background: #d82020
+        }
+
+        .ic b {
+            display: inline-block;
+            width: 20px;
+            height: 16px;
+            margin: 2px 1px;
+            background: #ddd;
+            color: #000;
+            font-size: 12px;
+            line-height: 16px
+        }
+
+        .ic b.on {
+            background: #ffd23a;
+            outline: 1px solid #000
+        }
+
+        .pn u {
+            display: block;
+            margin: 4px 0;
+            font-style: italic;
+            text-decoration: none
+        }
+
+        #del {
+            margin: 6px 0;
+            font-size: 8px
+        }
+
+        #del:hover,
+        .pn u:hover {
+            color: #ffd23a
+        }
+
+        #lp input {
+            width: 36px;
+            height: 18px;
+            padding: 0;
+            border: 1px solid #fff
+        }
+
+        #cp {
+            right: 0;
+            bottom: 44px;
+            width: 92px;
+            padding: 3px
+        }
+
+        .cg {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            margin-top: 3px
+        }
+
+        .cg b {
+            background: #eee;
+            color: #000;
+            font-size: 12px;
+            line-height: 20px
+        }
+
+        #bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 38px;
+            background: #fbe96a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 8px;
+            color: #222;
+            font: bold 18px Verdana, sans-serif;
+            white-space: nowrap;
+            overflow: hidden
+        }
+
+        .ar {
+            color: #e8801a;
+            font-size: 24px
+        }
+
+        #cat {
+            font: 11px Verdana;
+            width: 70px
+        }
+
+        #it {
+            font: 11px Verdana;
+            background: #fff;
+            border: 1px solid #888;
+            padding: 2px 4px
+        }
+
+        #msg {
+            position: absolute;
+            top: 4px;
+            left: 70px;
+            color: #000;
+            font: 10px Verdana;
+            text-shadow: 0 0 3px #fff
+        }
+
+        #studio {
+            flex-direction: column;
+            background: #d4d0c8
+        }
+
+        #ttl {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 20px;
+            padding: 0 3px;
+            background: linear-gradient(90deg, #0a246a, #a6caf0);
+            color: #fff;
+            font: bold 11px Tahoma, sans-serif
+        }
+
+        #ttl i {
+            font-style: normal
+        }
+
+        #ttl b {
+            display: inline-block;
+            width: 16px;
+            height: 14px;
+            margin-left: 2px;
+            background: #d4d0c8;
+            color: #000;
+            text-align: center;
+            font: bold 10px/10px Tahoma;
+            border: 2px outset #fff;
+            box-sizing: border-box
+        }
+
+        #mb {
+            display: flex;
+            background: #d4d0c8;
+            border-bottom: 1px solid #808080;
+            font: 11px Tahoma, sans-serif;
+            color: #000
+        }
+
+        .mn {
+            position: relative;
+            padding: 3px 8px
+        }
+
+        .mn:hover {
+            background: #0a246a;
+            color: #fff
+        }
+
+        .dd {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 100%;
+            min-width: 140px;
+            background: #d4d0c8;
+            border: 2px outset #fff;
+            z-index: 20
+        }
+
+        .mn:hover .dd {
+            display: block
+        }
+
+        .dd a {
+            display: block;
+            padding: 3px 14px;
+            color: #000;
+            white-space: nowrap
+        }
+
+        .dd a:hover {
+            background: #0a246a;
+            color: #fff
+        }
+
+        #wr {
+            flex: 1;
+            position: relative;
+            min-height: 0
+        }
+
+        #cv {
+            width: 100%;
+            height: 100%;
+            image-rendering: auto
+        }
+
+        #bar {
+            position: static;
+            flex: none;
+            height: 38px;
+            border-top: 2px outset #fff;
+            background: linear-gradient(#fdf1a0, #f5dc4a)
+        }
+
+        #cp {
+            bottom: 8px
+        }
+
+        #lp {
+            top: 8px;
+            max-height: calc(100% - 16px)
+        }
+
+        .pn {
+            background: linear-gradient(#8e8e8e, #6b6b6b);
+            border: 2px outset #bdbdbd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, .4)
+        }
+
+        .go {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            width: 46px;
+            height: 28px;
+            margin: 4px auto;
+            padding: 0;
+            line-height: 1;
+            font: bold 11px Arial, sans-serif;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, .4);
+            background: linear-gradient(#5be85b, #139a13);
+            border: 2px solid #fff;
+            border-radius: 14px;
+            overflow: hidden
+        }
+
+        .go.st {
+            background: linear-gradient(#ff6a6a, #b81414)
+        }
+
+        .ic b,
+        .cg b {
+            border: 2px outset #fff;
+            background: #d4d0c8;
+            box-sizing: border-box
+        }
+
+        #mq {
+            position: absolute;
+            display: none;
+            border: 1px dashed #fff;
+            background: rgba(255, 255, 255, .18);
+            pointer-events: none
+        }
+
+        #md {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, .35);
+            z-index: 30
+        }
+
+        .win {
+            background: #d4d0c8;
+            border: 2px outset #fff;
+            min-width: 260px;
+            max-width: 92%;
+            max-height: 90%;
+            overflow: auto;
+            color: #000;
+            font: 12px Tahoma, sans-serif
+        }
+
+        .wt {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(90deg, #0a246a, #a6caf0);
+            color: #fff;
+            padding: 2px 4px;
+            font-weight: bold
+        }
+
+        .wt b {
+            background: #d4d0c8;
+            color: #000;
+            padding: 0 5px;
+            border: 2px outset #fff
+        }
+
+        .wb {
+            padding: 10px
+        }
+
+        .wb label {
+            display: block;
+            margin: 6px 0
+        }
+
+        .wb input,
+        .wb textarea {
+            display: block;
+            width: 95%;
+            box-sizing: border-box;
+            font: 12px Tahoma
+        }
+
+        .wb input[type=color] {
+            width: 48px;
+            height: 22px;
+            display: inline-block
+        }
+
+        .wb button,
+        #pm {
+            font: 11px Tahoma;
+            padding: 3px 8px;
+            border: 2px outset #fff;
+            background: #d4d0c8;
+            color: #000
+        }
+
+        #pm {
+            font-size: 13px;
+            font-weight: bold
+        }
+
+        .tabs a {
+            margin-right: 10px;
+            text-decoration: underline;
+            color: #00c
+        }
+
+        .pl {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin: 5px 0
+        }
+
+        .pl b {
+            flex: 1
+        }
+
+        #pp {
+            position: absolute;
+            left: 8px;
+            bottom: 8px;
+            display: none;
+            max-width: 70%;
+            max-height: 70%;
+            overflow: auto;
+            background: #d4d0c8;
+            border: 2px outset #fff;
+            padding: 4px;
+            z-index: 15;
+            font: 11px Tahoma;
+            color: #000
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            align-items: center;
+            margin: 3px 0;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 3px
+        }
+
+        .row b {
+            width: 74px
+        }
+
+        .row a {
+            padding: 2px 6px;
+            border: 2px outset #fff;
+            background: #efecdf
+        }
+
+        .row a:hover {
+            background: #ffe27a
+        }
+
+        #pv2 {
+            position: relative;
+            width: 90px;
+            height: 120px;
+            margin: 8px auto
+        }
+
+        #acct {
+            display: none;
+            padding: 20px 10px;
+            overflow-x: auto;
+            background: var(--bg);
+            color: var(--fg)
+        }
+
+        #acct label {
+            display: block;
+            margin: 4px 0
+        }
+
+        #acct input[type=text],
+        #acct input[type=password],
+        #acct input:not([type]),
+        #acct textarea {
+            display: block;
+            width: 230px;
+            box-sizing: border-box;
+            font: 11px Verdana;
+            margin: 3px 0 8px;
+            border: 1px solid #888
+        }
+
+        #acct button {
+            font: 11px Verdana;
+            margin-top: 6px
+        }
+
+        #acct .c h4 {
+            font-size: 13px
+        }
+
+        #acct #pv2 {
+            margin: 12px 0
+        }
+
+        #pg {
+            display: none;
+            padding: 20px 10px;
+            overflow-x: auto;
+            background: var(--bg);
+            color: var(--fg)
+        }
+
+        #pg label {
+            display: block;
+            margin: 4px 0
+        }
+
+        #pg input {
+            display: block;
+            width: 230px;
+            box-sizing: border-box;
+            font: 11px Verdana;
+            margin: 3px 0 8px;
+            border: 1px solid #888
+        }
+
+        #pg button {
+            font: 11px Verdana
+        }
+
+        #ex {
+            display: none;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 25;
+            font: bold 12px Tahoma, sans-serif;
+            padding: 4px 10px;
+            border: 2px outset #fff;
+            background: #d4d0c8;
+            color: #000
+        }
+
+        #studio.gm #ex {
+            display: block
+        }
+
+        #studio.gm #ttl,
+        #studio.gm #mb,
+        #studio.gm #lp,
+        #studio.gm #bar,
+        #studio.gm #cp {
+            display: none
+        }
+
+        #pg ul {
+            margin: 4px 0 12px 18px;
+            padding: 0
+        }
+
+        #pg p {
+            margin: 10px 0 2px
+        }
+
+        #pg li {
+            margin: 3px 0
+        }
+
+        html,
+        body {
+            overscroll-behavior: none;
+            -webkit-touch-callout: none
+        }
+
+        #cv {
+            touch-action: none
+        }
+
+        @media(hover:none) {
+            .mn:hover .dd {
+                display: none
+            }
+
+            .mn.op .dd {
+                display: block
+            }
+        }
+
+        .mn.op .dd {
+            display: block
+        }
+
+        #tc {
+            display: none
+        }
+
+        body.touch #tc {
+            display: block
+        }
+
+        #pad {
+            position: absolute;
+            left: 66px;
+            bottom: 8px;
+            display: grid;
+            grid-template-columns: repeat(3, 46px);
+            gap: 4px;
+            z-index: 12
+        }
+
+        #pad b,
+        #jb b,
+        #act b {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 46px;
+            height: 46px;
+            border: 2px outset #fff;
+            background: rgba(212, 208, 200, .88);
+            color: #000;
+            font: bold 15px Tahoma, sans-serif;
+            border-radius: 8px;
+            touch-action: none;
+            user-select: none;
+            box-sizing: border-box
+        }
+
+        #pad b.x {
+            visibility: hidden;
+            pointer-events: none
+        }
+
+        #jb {
+            display: none;
+            position: absolute;
+            right: 104px;
+            bottom: 8px;
+            gap: 6px;
+            z-index: 12
+        }
+
+        #studio.ply #jb {
+            display: flex
+        }
+
+        #act {
+            position: absolute;
+            left: 66px;
+            top: 30px;
+            display: flex;
+            gap: 4px;
+            z-index: 12
+        }
+
+        #studio.ply #act {
+            display: none
+        }
+
+        #studio.ply .ed {
+            visibility: hidden
+        }
+
+        #studio.gm #pad {
+            left: 8px
+        }
+
+        #studio.gm #jb {
+            right: 8px
+        }
+
+        body.touch .pn u {
+            padding: 6px 0
+        }
+
+        body.touch #del {
+            padding: 6px 0
+        }
+
+        #pg .c,
+        #acct .c {
+            max-width: 100%
+        }
+
+        @media(max-width:760px) {
+            #home .cols {
+                min-width: 0 !important;
+                flex-wrap: wrap;
+                gap: 14px
+            }
+
+            #home .c {
+                width: auto !important;
+                min-width: 150px
+            }
+
+            .logo {
+                font-size: 30px
+            }
+
+            #bar {
+                font-size: 13px
+            }
+
+            .ar {
+                font-size: 18px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="home">
+        <div class="logo"><span style="color:#e0207f">D</span><span style="color:#f0592a">y</span><span
+                style="color:#3a56c4">n</span><span style="color:#e0207f">a</span><span
+                style="color:#7cb82f">B</span><span style="color:#f5b800">l</span><span
+                style="color:#f5b800">o</span><span style="color:#3fa9d6">c</span><span
+                style="color:#e0207f">k</span><span style="color:#2a8f3a">s</span>. <small>Beta</small></div>
+        <div class="cols">
+            <div class="c" style="width:150px">
+                <section>
+                    <h4><a onclick="openAcct(0)">Log In...</a></h4>
+                    <div>(free)</div>
+                </section>
+                <section>
+                    <h4>GoBlocks</h4>
+                    <div><a onclick="openPlaces()">saved games</a></div>
+                </section>
+                <section>
+                    <h4>Help</h4>
+                    <div><a onclick="openHelp()">Controls &amp; options</a></div>
+                </section>
+            </div>
+            <div class="c" style="width:190px">
+                <section>
+                    <h4>Build a Place</h4>
+                    <div><a onclick="openStudio('scratch')">Make a place</a></div>
+                    <div><a onclick="enterStudio()">Go to Studio</a></div>
+                </section>
+            </div>
+            <div class="c">
+                <div class="card">
+                    <div class="th" style="background:linear-gradient(#6fa6e8 55%,#2f5fc0 55%)"></div>John's Puzzle
+                    Game<br>Winning Game: "<a onclick="playGame('puzzle')">John's Puzzle Game</a>"
+                </div>
+                <div class="card">
+                    <div class="th" style="background:linear-gradient(#a8c8f0 40%,#4a9a3a 40%)"></div>Dump
+                    Truck<br>Winning Model: "<a onclick="playGame('truck')">Dump Truck</a>"
+                </div>
+            </div>
+        </div>
+        <div class="foot"><i>Copyright © 2004 <u>DynaBlocks</u> All Rights Reserved.</i></div>
+    </div>
+    <div id="acct">
+        <div class="logo"><span style="color:#e0207f">D</span><span style="color:#f0592a">y</span><span
+                style="color:#3a56c4">n</span><span style="color:#e0207f">a</span><span
+                style="color:#7cb82f">B</span><span style="color:#f5b800">l</span><span
+                style="color:#f5b800">o</span><span style="color:#3fa9d6">c</span><span
+                style="color:#e0207f">k</span><span style="color:#2a8f3a">s</span>. <small>Beta</small></div>
+        <div class="cols" style="align-items:flex-start;flex-wrap:wrap">
+            <div class="c" style="width:260px" id="ab"></div>
+            <div class="c" style="width:260px">
+                <h4>Personagem</h4>
+                <div id="cb"></div>
+            </div>
+        </div>
+        <div class="foot"><a onclick="goHome()">&laquo; DynaBlocks.com</a><a onclick="resumeStudio()">Go to Studio</a>
+        </div>
+    </div>
+    <div id="pg"></div>
+    <div id="studio">
+        <div id="ttl"><span id="tt">DynaBlocks Studio - [Untitled]</span><i><b>_</b><b>□</b><b
+                    onclick="goHome()">✕</b></i></div>
+        <div id="mb"></div>
+        <div id="wr"><canvas id="cv"></canvas>
+            <div id="mq"></div><button id="ex" onclick="exitGame()">Sair do jogo</button>
+            <div id="tc">
+                <div id="act"><b id="tu">↩</b><b id="tcp">⧉</b><b id="tpv">📋</b><b id="tr">⟳90</b></div>
+                <div id="pad"><b data-k="e" class="ed">⤒</b><b data-k="w">▲</b><b data-k="q" class="ed">⤓</b><b
+                        data-k="a">◀</b><b class="x"></b><b data-k="d">▶</b><b class="x"></b><b data-k="s">▼</b><b
+                        class="x"></b></div>
+                <div id="jb"><b data-k=" ">⤴</b><b id="ee">E</b></div>
+            </div>
+            <div id="md"></div>
+            <div id="pp"></div>
+            <div class="pn" id="lp"><button class="go" id="go">GO</button><button class="go st" id="stp">STOP</button>
+                <div class="ic"><b id="t1" title="Mover (1)">✥</b><b id="t2" title="Escalar (2)">⤢</b><b id="t3"
+                        title="Girar (3)">⟳</b></div>
+                <u id="grp">Group</u><u id="ung">UnGroup</u><u id="dup">Duplicate</u>
+                <div id="del">🗑<br>DELETE</div>
+                <input type="color" id="col" value="#c4281c"><u id="anc">Anchor</u><u id="nw">Novo</u><u
+                    id="sv">Salvar</u><u id="op">Places</u><u id="acc">Conta</u><u id="avt">Avatar</u>
+            </div>
+            <div class="pn" id="cp">CameraMenu<div class="cg"><b data-a="L">↶</b><b data-a="I">▲</b><b
+                        data-a="R">↷</b><b data-a="PL">◀</b><b data-a="C">◉</b><b data-a="PR">▶</b><span></span><b
+                        data-a="O">▼</b><span></span></div>
+            </div>
+            <div id="msg"></div>
+        </div>
+        <div id="bar"><button id="pm">▲ Partes</button><span style="display:none"><b id="pv"></b><select
+                    id="cat"></select><b id="nx"></b><span id="it"></span></span><span>(C) DYNABLOCKS 2004</span></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const $ = i => document.getElementById(i);
+        function show() { }
+        const LV = {
+            puzzle: () => { let a = []; for (let i = 0; i < 6; i++)a.push(['brick', -9 + i * 3, (i + 1) / 2, 0, 3, i + 1, 4, '#6d6e6c', 1]); a.push(['brick', 12, .5, 0, 6, 1, 6, '#287f47', 1], ['brick', 4, .6, -6, 2, 1.2, 2, '#c4281c', 0], ['brick', 6, .6, -6, 2, 1.2, 2, '#f5cd30', 0]); return a },
+            truck: () => [['brick', 0, 1.5, 0, 6, 1, 3, '#f5cd30', 1], ['brick', -2.5, 2.6, 0, 1.6, 1.2, 3, '#c4281c', 1], ['brick', 1, 2.3, 0, 4, .6, 3, '#da8541', 1], ...[[-2, -1.7], [-2, 1.7], [2, -1.7], [2, 1.7]].map(w => ['cyl', w[0], 1, w[1], 2, .6, 2, '#222', 1, Math.PI / 2, 0])],
+            template: () => [['brick', 0, 1.5, 0, 5, 1, 3, '#0d69ac', 1], ['brick', 0, 2.4, 0, 2.4, .8, 2.6, '#c4281c', 1], ...[[-1.7, -1.7], [-1.7, 1.7], [1.7, -1.7], [1.7, 1.7]].map(w => ['cyl', w[0], 1, w[1], 2, .6, 2, '#222', 1, Math.PI / 2, 0])]
+        };
+        let R, S, C, cv, parts = [], sels = [], sel = null, gz = null, bhs = [], playing = false, ch = null, vy = 0, snap = null, yaw = .8, pit = .6, dist = 30, tgt, mode = 1, gid = 1, chc = '#c4281c', cat = 'Bricks', ci = 0, dn = null;
+        const K = {}, SG = new THREE.CylinderGeometry(.3, .3, .2, 10), AXW = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)], CL = [0xff2020, 0x20c020, 0x2040ff];
+        const CAT = { Bricks: [['1x1', 1, 1.2, 1], ['1x2', 1, 1.2, 2], ['2x2', 2, 1.2, 2], ['2x4', 2, 1.2, 4], ['2x6', 2, 1.2, 6], ['4x4', 4, 1.2, 4], ['4x8', 4, 1.2, 8]], Plates: [['2x2', 2, .4, 2], ['2x4', 2, .4, 4], ['4x4', 4, .4, 4], ['6x10', 6, .4, 10]], Cylinders: [['Small', 1, 2, 1], ['Medium', 2, 2, 2], ['Large', 4, 2, 4]], Spheres: [['Small', 1, 1, 1], ['Medium', 2, 2, 2], ['Large', 4, 4, 4]], Wheels: [['Small', 2, .6, 2], ['Large', 3, .8, 3]], Seats: [['Seat', 2, 1.2, 2]], Spawns: [['Spawn', 4, .4, 4]], Fires: [['Small', 1.5, 2.5, 1.5], ['Big', 3, 5, 3]], Magics: [['Orb', 2, 2, 2], ['Big Orb', 4, 4, 4]], Spinners: [['Spinner', 8, .8, 1.5], ['Big Spinner', 14, 1, 2]], Characters: [['Red', '#c4281c'], ['Blue', '#0d69ac'], ['Green', '#287f47'], ['Black', '#333333']] };
+        function RB(w, h, d, r) { r = Math.min(r, w / 2 - .01, h / 2 - .01, d / 2 - .01); const a = w / 2 - r, b = h / 2 - r, s = new THREE.Shape(); s.moveTo(-a, -b); s.lineTo(a, -b); s.lineTo(a, b); s.lineTo(-a, b); s.closePath(); const g = new THREE.ExtrudeGeometry(s, { depth: d - 2 * r, bevelEnabled: true, bevelThickness: r, bevelSize: r, bevelSegments: 3, steps: 1 }); g.translate(0, 0, -(d - 2 * r) / 2); return g }
+        const mat = c => new THREE.MeshLambertMaterial({ color: c }), wb = p => new THREE.Box3().setFromObject(p.userData.box || p);
+        onkeydown = e => { if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || $('md').style.display == 'flex') return; K[e.key.toLowerCase()] = 1; if ($('studio').style.display != 'flex') return; if (playing && e.key == ' ') e.preventDefault(); if (playing) { if (e.key.toLowerCase() == 'e' && !e.repeat) toggleDrive(); return } if (e.key == 'Delete' || e.key == 'Backspace') { e.preventDefault(); del() } if (e.ctrlKey || e.metaKey) { const k = e.key.toLowerCase(); if (k == 'z') { e.preventDefault(); undoOp() } if (k == 'u') { e.preventDefault(); $('grp').click() } if (k == 'c') clip = sels.map(ser1); if (k == 'v') { e.preventDefault(); paste() } } if (e.key == 'r' && sel) rotSel(Math.PI / 2); if ('123'.includes(e.key)) setMode(+e.key); if (e.ctrlKey && e.key == 'd') { e.preventDefault(); dup() } };
+        onkeyup = e => K[e.key.toLowerCase()] = 0;
+        function openStudio(k) { hideAll(); $('studio').style.display = 'flex'; init(); stopPlay(); clear(); if (k != 'scratch') LV[k]().forEach(add); select(null) }
+        function playGame(k) { openStudio(k); startPlay() }
+        function rebuild(p) {
+            const u = p.userData, [sx, sy, sz] = u.s; while (p.children.length) p.remove(p.children[0]);
+            const g = u.t == 'fire' ? new THREE.ConeGeometry(sx / 2, sy, 10) : u.t == 'magic' ? new THREE.SphereGeometry(sx / 2, 12, 10) : u.t == 'cyl' ? new THREE.CylinderGeometry(sx / 2, sx / 2, sy, 20) : u.t == 'sph' ? new THREE.SphereGeometry(sx / 2, 14, 10) : RB(sx, sy, sz, .12);
+            const b = new THREE.Mesh(g, u.t == 'fire' || u.t == 'magic' ? new THREE.MeshBasicMaterial({ color: u.t == 'fire' ? 0xff5a00 : 0xb04cff, transparent: true, opacity: .85 }) : u.mat); u.box = b; p.add(b);
+            if (u.t == 'fire') { const k = new THREE.Mesh(new THREE.ConeGeometry(sx / 4, sy * .7, 8), new THREE.MeshBasicMaterial({ color: 0xffe040 })); k.position.y = -sy * .1; p.add(k) } if (u.t == 'magic') { u.orb = [0, 1, 2].map(i => { const k = new THREE.Mesh(new THREE.SphereGeometry(.2, 6, 5), new THREE.MeshBasicMaterial({ color: 0xffffff })); p.add(k); return k }) } if (u.t == 'seat') { const k = new THREE.Mesh(RB(sx, 1.6, .4, .12), mat('#555555')); k.position.set(0, sy / 2 + .8, sz / 2 - .2); p.add(k) }
+            if (u.t == 'brick') { const nx = Math.max(1, Math.round(sx)), nz = Math.max(1, Math.round(sz)); for (let i = 0; i < nx; i++)for (let j = 0; j < nz; j++) { const s = new THREE.Mesh(SG, u.mat); s.position.set(-sx / 2 + (i + .5) * sx / nx, sy / 2 + .1, -sz / 2 + (j + .5) * sz / nz); p.add(s) } }
+        }
+        function mkChar(p, c, o) { o = o || { main: c, band: '#aaaaaa', arms: '#f5cd30', head: '#f5cd30' }; const b = (w, h, d, x, y, z, col) => { const m = new THREE.Mesh(RB(w, h, d, .08), mat(col)); m.position.set(x, y, z); p.add(m) }; b(1, 2, 1, -.5, 1, 0, o.main); b(1, 2, 1, .5, 1, 0, o.main); b(2, 1.4, 1, 0, 3.3, 0, o.main); b(2, .6, 1, 0, 2.3, 0, o.band);[-1.55, 1.55].forEach(x => { b(1, .97, 1, x, 3.5, 0, o.arms); b(1, .97, 1, x, 2.5, 0, o.arms) }); const hd = new THREE.Mesh(new THREE.SphereGeometry(1.1, 20, 16), mat(o.head)); hd.position.set(0, 4.95, .55); p.add(hd) }
+        function add(a) {
+            const [t, x, y, z, sx, sy, sz, col, an, rx, ry, rz, g] = a, p = new THREE.Group(); p.userData = { t, a: an, s: [sx, sy, sz], v: 0, g: g || 0, col };
+            if (t == 'char') { p.userData.nc = 1; mkChar(p, col) } else { if (t == 'fire' || t == 'magic') p.userData.nc = 1; p.userData.mat = mat(col); rebuild(p) }
+            p.position.set(x, y, z); p.rotation.set(rx || 0, ry || 0, rz || 0); S.add(p); parts.push(p); return p
+        }
+        function ser1(q) { const u = q.userData; return [u.t, q.position.x, q.position.y, q.position.z, ...u.s, u.mat ? '#' + u.mat.color.getHexString() : u.col, u.a, q.rotation.x, q.rotation.y, q.rotation.z, u.g] }
+        function clear() { select(null); parts.forEach(p => S.remove(p)); parts = [] }
+        function setS(p, i, v) { const u = p.userData; let s = u.s; s[i] = v; if (u.t == 'sph') s = [v, v, v]; else if (u.t == 'cyl' && i != 1) s[0] = s[2] = v; u.s = s; rebuild(p) }
+        function hl() { bhs.forEach(b => S.remove(b)); bhs = sels.map(q => { const b = new THREE.BoxHelper(q.userData.box || q, 0xffff00); S.add(b); return b }); $('msg').textContent = sel && !playing ? `${sel.userData.t} ${sel.userData.s.map(v => +v.toFixed(1)).join('x')} ${sel.userData.a ? '[Anchored]' : ''}${sels.length > 1 ? ' (' + sels.length + ' selecionadas)' : ''}` : '' }
+        function select(m, ad) { if (!m) { sels = []; sel = null } else { const gp = m.userData.g ? parts.filter(q => q.userData.g == m.userData.g) : [m]; sels = ad ? (sels.includes(m) ? sels.filter(q => !gp.includes(q)) : [...new Set([...sels, ...gp])]) : gp.slice(); sel = sels.includes(m) ? m : sels[0] || null } hl(); gizmo() }
+        function gizmo() {
+            if (gz) { S.remove(gz); gz = null } if (!sel || playing) return; gz = new THREE.Group(); const s = sel.userData.s;
+            for (let i = 0; i < 3; i++)for (const g of (mode == 2 ? [1, -1] : [1])) { const h = new THREE.Mesh(mode == 1 ? new THREE.ConeGeometry(.35, 1, 8) : mode == 2 ? new THREE.BoxGeometry(.6, .6, .6) : new THREE.TorusGeometry(Math.max(...s) / 2 + 1.3, window.TOUCH ? .3 : .12, 6, 40), new THREE.MeshBasicMaterial({ color: CL[i], depthTest: false })); h.renderOrder = 9; h.userData = { i, g }; const ax = mode == 2 ? AXW[i].clone().applyQuaternion(sel.quaternion) : AXW[i]; h.position.copy(sel.position).addScaledVector(ax, g * ((mode == 3 ? -1.5 : mode == 2 ? s[i] / 2 : Math.max(...s) / 2) + 1.5)); if (mode == 1) h.quaternion.setFromUnitVectors(AXW[1], ax); if (mode == 3) h.quaternion.setFromUnitVectors(AXW[2], ax); if (window.TOUCH && mode != 3) h.scale.setScalar(2); gz.add(h) }
+            S.add(gz)
+        }
+        function setMode(m) { mode = m;[1, 2, 3].forEach(i => $('t' + i).classList.toggle('on', i == m)); gizmo() }
+        function del() { sels.forEach(q => { S.remove(q); parts = parts.filter(p => p != q) }); select(null) }
+        function dup() { if (!sels.length) return; const n = sels.map(q => { const a = ser1(q); a[1] += 1; a[3] += 1; a[12] = 0; return add(a) }); sels = n; sel = n[0]; hl(); gizmo() }
+        function dropOn(p) { const b = wb(p); let f = 0; parts.forEach(q => { if (q == p || q.userData.nc) return; const c = wb(q); if (b.min.x < c.max.x && b.max.x > c.min.x && b.min.z < c.max.z && b.max.z > c.min.z) f = Math.max(f, c.max.y) }); p.position.y += f - b.min.y }
+        function ins() {
+            const it = CAT[cat][ci], x = Math.round(tgt.x), z = Math.round(tgt.z); let p;
+            if (cat == 'Characters') p = add(['char', x, 0, z, 1, 1, 1, it[1], 0]);
+            else { p = add([{ Bricks: 'brick', Plates: 'brick', Cylinders: 'cyl', Spheres: 'sph', Wheels: 'cyl', Seats: 'seat', Spawns: 'spawn', Fires: 'fire', Magics: 'magic', Spinners: 'spin' }[cat], x, 5, z, it[1], it[2], it[3], ({ Spawns: '#2fbf2f', Fires: '#ff6a00', Magics: '#b04cff', Spinners: '#e0a020' }[cat] || $('col').value), ({ Spinners: 1, Spawns: 1 }[cat] || 0), 0, 0, cat == 'Wheels' ? Math.PI / 2 : 0]); dropOn(p) }
+            select(p)
+        }
+        function upd() { $('it').textContent = '▸ ' + cat.slice(0, -1) + ' ' + CAT[cat][ci][0] + ' (clique p/ inserir)'; if (cat == 'Characters') chc = CAT[cat][ci][1] }
+        function ray(e) { const r = cv.getBoundingClientRect(), rc = new THREE.Raycaster(); rc.setFromCamera(new THREE.Vector2((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1), C); return rc }
+        function par(rc, O, a) { const d = rc.ray.direction, w = O.clone().sub(rc.ray.origin), b = a.dot(d), n = 1 - b * b; return n < 1e-4 ? 0 : (b * d.dot(w) - a.dot(w)) / n }
+        function ax(h) { const v = AXW[h.i].clone(); return mode == 2 ? v.applyQuaternion(sel.quaternion) : v }
+        const sn = (v, k) => Math.round(v / k) * k;
+        function startPlay() { if (playing) return; select(null); snap = parts.map(p => [p.position.clone(), p.quaternion.clone()]); ch = new THREE.Group(); mkChar(ch, chr.main, chr); ch.position.copy(spawnPos()); vy = 0; drvV = null; vehs = parts.filter(q => q.userData.t == 'seat').map(s => ({ s, P: s.userData.g ? parts.filter(q => q.userData.g == s.userData.g) : [s], sp: 0, v: 0 })); S.add(ch); playing = true; $('studio').classList.add('ply'); dist = 20; $('msg').textContent = 'WASD: andar | Espaço: pular | E: entrar/sair do carro (perto do Seat) | botão direito: câmera' }
+        function stopPlay() { if (!playing) return; playing = false; $('studio').classList.remove('ply'); drvV = null; vehs = []; S.remove(ch); parts.forEach((p, i) => { if (!snap[i]) return; p.position.copy(snap[i][0]); p.quaternion.copy(snap[i][1]); p.userData.v = 0; if (p.userData.box) p.userData.box.rotation.set(0, 0, 0) }); dist = 30; $('msg').textContent = '' }
+        function init() {
+            if (R) { rs(); return }
+            cv = $('cv'); R = new THREE.WebGLRenderer({ canvas: cv, antialias: true }); S = new THREE.Scene(); S.background = new THREE.Color(0x9cc4e4); C = new THREE.PerspectiveCamera(60, 1, .1, 500); tgt = new THREE.Vector3(0, 2, 0);
+            S.add(new THREE.AmbientLight(0xffffff, .75)); const L = new THREE.DirectionalLight(0xffffff, .6); L.position.set(10, 20, 8); S.add(L);
+            const c = document.createElement('canvas'); c.width = c.height = 32; const x = c.getContext('2d'); x.fillStyle = '#22d022'; x.fillRect(0, 0, 32, 32); x.fillStyle = '#1aa81a'; x.beginPath(); x.arc(17, 17, 7, 0, 7); x.fill(); x.fillStyle = '#5cf05c'; x.beginPath(); x.arc(15, 15, 6, 0, 7); x.fill();
+            const tx = new THREE.CanvasTexture(c); tx.magFilter = tx.minFilter = THREE.NearestFilter; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(50, 50);
+            const bs = new THREE.Mesh(new THREE.BoxGeometry(100, 1, 100), new THREE.MeshLambertMaterial({ map: tx })); bs.position.y = -.5; S.add(bs);
+            $('cat').innerHTML = Object.keys(CAT).map(k => `<option>${k}</option>`).join(''); $('cat').onchange = e => { cat = e.target.value; ci = 0; upd() };
+            $('pv').onclick = () => { ci = (ci + CAT[cat].length - 1) % CAT[cat].length; upd() }; $('nx').onclick = () => { ci = (ci + 1) % CAT[cat].length; upd() }; $('it').onclick = ins; upd();
+            [1, 2, 3].forEach(i => $('t' + i).onclick = () => setMode(i)); setMode(1);
+            $('go').onclick = startPlay; $('stp').onclick = stopPlay; $('del').onclick = del; $('dup').onclick = dup;
+            $('grp').onclick = () => { if (!playing && sels.length > 1) { pushU(); const g = gid++; sels.forEach(q => q.userData.g = g) } }; $('ung').onclick = () => { pushU(); sels.forEach(q => q.userData.g = 0) };
+            $('anc').onclick = () => { pushU(); sels.forEach(q => q.userData.a = q.userData.a ? 0 : 1); hl() };
+            $('col').oninput = e => { if (Date.now() - (window.lu || 0) > 800) pushU(); window.lu = Date.now(); sels.forEach(q => q.userData.mat && q.userData.mat.color.set(e.target.value)) };
+            $('nw').onclick = () => { stopPlay(); clear() };
+            $('sv').onclick = () => { try { localStorage.setItem('dyna2', JSON.stringify(parts.map(ser1))); $('msg').textContent = 'Salvo.' } catch (e) { $('msg').textContent = 'Não foi possível salvar.' } };
+            $('op').onclick = () => { try { const d = localStorage.getItem('dyna2'); if (d) { stopPlay(); clear(); JSON.parse(d).forEach(add) } } catch (e) { } };
+            const pan = d => { tgt.x += Math.cos(yaw) * d; tgt.z -= Math.sin(yaw) * d }, ACT = { L: () => yaw += .05, R: () => yaw -= .05, I: () => dist = Math.max(5, dist - .6), O: () => dist = Math.min(90, dist + .6), PL: () => pan(-.4), PR: () => pan(.4), C: () => { yaw = .8; pit = .6; dist = 30; tgt.set(0, 2, 0) } };
+            document.querySelectorAll('[data-a]').forEach(b => { let t; b.onpointerdown = () => { ACT[b.dataset.a](); t = setInterval(ACT[b.dataset.a], 60) }; b.onpointerup = b.onpointerleave = () => clearInterval(t) });
+            cv.oncontextmenu = e => e.preventDefault();
+            cv.onpointerdown = e => { if (tdown(e)) return; cv.setPointerCapture(e.pointerId); dn = { x: e.clientX, y: e.clientY, m: 0, h: null, cam: e.button == 2 || (playing && e.pointerType == 'touch'), sx: e.clientX, sy: e.clientY }; if (dn.cam || playing) return; if (gz) { const hit = ray(e).intersectObjects(gz.children)[0]; if (hit) { const h = hit.object.userData; dn.h = h; pushU(); dn.a = ax(h); dn.O = sel.position.clone(); dn.s0 = par(ray(e), dn.O, dn.a); dn.p0 = sels.map(q => q.position.clone()); dn.q = sels.map(q => q.quaternion.clone()); dn.sz = sel.userData.s.slice(); dn.a0 = mode == 3 ? ang(e) : 0 } } };
+            cv.onpointermove = e => {
+                if (tmove(e)) return; if (!dn) return; const dx = e.clientX - dn.x, dy = e.clientY - dn.y; dn.x = e.clientX; dn.y = e.clientY; dn.m += Math.abs(dx) + Math.abs(dy);
+                if (dn.cam) { yaw -= dx * .01; pit = Math.max(-1.5, Math.min(1.5, pit + dy * .01)); return }
+                if (dn.h) {
+                    const h = dn.h, s = par(ray(e), dn.O, dn.a) - dn.s0;
+                    if (mode == 1) { const d = sn(s, 1); sels.forEach((q, i) => q.position.copy(dn.p0[i]).addScaledVector(dn.a, d)) }
+                    else if (mode == 2 && sel.userData.t != 'char') { const n = Math.max(.5, dn.sz[h.i] + h.g * sn(s, .5)); setS(sel, h.i, n); sel.position.copy(dn.O).addScaledVector(dn.a, h.g * (sel.userData.s[h.i] - dn.sz[h.i]) / 2) }
+                    else if (mode == 3) { const d = sn(ang(e) - dn.a0, Math.PI / 12), qa = new THREE.Quaternion().setFromAxisAngle(dn.a, d); sels.forEach((q, i) => { q.position.copy(dn.p0[i]).sub(dn.O).applyAxisAngle(dn.a, d).add(dn.O); q.quaternion.copy(qa).multiply(dn.q[i]) }) }
+                    gizmo(); hl(); return
+                }
+                if (dn.m > 5 && !playing) { const r = $('wr').getBoundingClientRect(), m = $('mq'); m.style.display = 'block'; m.style.left = Math.min(dn.sx, e.clientX) - r.left + 'px'; m.style.top = Math.min(dn.sy, e.clientY) - r.top + 'px'; m.style.width = Math.abs(e.clientX - dn.sx) + 'px'; m.style.height = Math.abs(e.clientY - dn.sy) + 'px' }
+            };
+            cv.onpointerup = e => { if (tup(e)) return; $('mq').style.display = 'none'; if (dn && !dn.cam && !dn.h && !playing) { if (dn.m <= 5) { const h = ray(e).intersectObjects(parts, true)[0]; let o = h && h.object; while (o && o.parent != S) o = o.parent; select(o || null, e.shiftKey) } else boxSel(e) } dn = null };
+            cv.onwheel = e => { dist = Math.max(1, Math.min(300, dist + e.deltaY * .03)); e.preventDefault() };
+            mkMenu(); onresize = rs; rs(); select(null); loop()
+        }
+        function rs() { const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return; R.setPixelRatio(Math.min(devicePixelRatio, window.TOUCH ? 1.5 : 2)); R.setSize(w, h, false); C.aspect = w / h; C.updateProjectionMatrix() }
+        function loop() { requestAnimationFrame(loop); try { tick() } catch (e) { console.error(e) } }
+        function tick() {
+            if ($('studio').style.display != 'flex') return;
+            const sol = parts.filter(p => !p.userData.nc); let t = tgt;
+            if (playing) {
+                sol.forEach(p => { if (p.userData.a || vehs.some(V => V.P.includes(p))) return; const b = wb(p), h = (b.max.y - b.min.y) / 2; p.userData.v -= .02; let ny = p.position.y + p.userData.v, fl = Math.abs(p.position.x) > 50 || Math.abs(p.position.z) > 50 ? -999 : 0; sol.forEach(q => { if (q == p) return; const c = wb(q); if (b.min.x < c.max.x && b.max.x > c.min.x && b.min.z < c.max.z && b.max.z > c.min.z && c.max.y <= b.min.y + .2) fl = Math.max(fl, c.max.y) }); if (ny - h < fl) { ny = fl + h; p.userData.v = 0 } p.position.y = ny });
+                vehStep(); special(); const p = ch.position, f = drvV ? 0 : (K.w || K.arrowup ? 1 : 0) - (K.s || K.arrowdown ? 1 : 0), s = drvV ? 0 : (K.d || K.arrowright ? 1 : 0) - (K.a || K.arrowleft ? 1 : 0), dx = -Math.sin(yaw) * f + Math.cos(yaw) * s, dz = -Math.cos(yaw) * f - Math.sin(yaw) * s;
+                const bx = (x, z, y) => new THREE.Box3(new THREE.Vector3(x - .8, y + .4, z - .8), new THREE.Vector3(x + .8, y + 5, z + .8)), hit = b => sol.some(q => wb(q).intersectsBox(b));
+                if (dx || dz) { ch.rotation.y = Math.atan2(dx, dz); if (!hit(bx(p.x + dx * .18, p.z, p.y))) p.x += dx * .18; if (!hit(bx(p.x, p.z + dz * .18, p.y))) p.z += dz * .18 }
+                let fl = Math.abs(p.x) > 50 || Math.abs(p.z) > 50 ? -999 : 0; sol.forEach(q => { const b = wb(q); if (p.x + .8 > b.min.x && p.x - .8 < b.max.x && p.z + .8 > b.min.z && p.z - .8 < b.max.z && b.max.y <= p.y + .5) fl = Math.max(fl, b.max.y) });
+                vy -= .03; let ny = p.y + vy, on = 0; if (ny <= fl) { ny = fl; vy = 0; on = 1 } if (on && K[' ']) vy = .5; p.y = ny; if (p.y < -40) { p.copy(spawnPos()); vy = 0 }
+                if (drvV) { p.copy(drvV.s.position); p.y += 1; vy = 0 } t = p.clone().add(new THREE.Vector3(0, 3, 0))
+            }
+            else { const f = (K.w ? 1 : 0) - (K.s ? 1 : 0), s = (K.d ? 1 : 0) - (K.a ? 1 : 0), v = (K.e ? 1 : 0) - (K.q ? 1 : 0), sp = K.shift ? 1.2 : .45, cp = Math.cos(pit); tgt.x += (-Math.sin(yaw) * cp * f + Math.cos(yaw) * s) * sp; tgt.z += (-Math.cos(yaw) * cp * f - Math.sin(yaw) * s) * sp; tgt.y += (-Math.sin(pit) * f + v) * sp }
+            anim(); bhs.forEach(b => b.update());
+            C.position.set(t.x + dist * Math.sin(yaw) * Math.cos(pit), t.y + dist * Math.sin(pit), t.z + dist * Math.cos(yaw) * Math.cos(pit)); C.lookAt(t); R.render(S, C)
+        }
+
+        let vehs = [], drvV = null;
+        function ang(e) { const a = dn.a, O = dn.O, pt = new THREE.Vector3(); if (!ray(e).ray.intersectPlane(new THREE.Plane().setFromNormalAndCoplanarPoint(a, O), pt)) return dn.l || 0; const v = pt.sub(O), hp = Math.abs(a.y) < .9 ? AXW[1] : AXW[0], u = new THREE.Vector3().crossVectors(hp, a).normalize(), w = new THREE.Vector3().crossVectors(a, u); return dn.l = Math.atan2(v.dot(w), v.dot(u)) }
+        function boxSel(e) { const r = cv.getBoundingClientRect(), x0 = Math.min(dn.sx, e.clientX), x1 = Math.max(dn.sx, e.clientX), y0 = Math.min(dn.sy, e.clientY), y1 = Math.max(dn.sy, e.clientY), v = new THREE.Vector3(); let n = parts.filter(q => { wb(q).getCenter(v); v.project(C); const X = (v.x * .5 + .5) * r.width + r.left, Y = (-v.y * .5 + .5) * r.height + r.top; return v.z < 1 && X >= x0 && X <= x1 && Y >= y0 && Y <= y1 }); const gs = new Set(n.map(q => q.userData.g).filter(g => g)); n = [...new Set([...n, ...parts.filter(q => gs.has(q.userData.g))])]; if (e.shiftKey) n = [...new Set([...sels, ...n])]; sels = n; sel = n[0] || null; hl(); gizmo() }
+        function rotSel(a) { const O = sel.position.clone(), q = new THREE.Quaternion().setFromAxisAngle(AXW[1], a); sels.forEach(s => { s.position.sub(O).applyAxisAngle(AXW[1], a).add(O); s.quaternion.premultiply(q) }); gizmo(); hl() }
+        function toggleDrive() { if (drvV) { ch.visible = true; ch.position.copy(drvV.s.position).add(new THREE.Vector3(3, 0, 0).applyQuaternion(drvV.s.quaternion)); drvV = null; return } const V = vehs.find(v => v.s.position.distanceTo(ch.position) < 6); if (V) { drvV = V; ch.visible = false } }
+        function vehStep() {
+            vehs.forEach(V => {
+                const P = V.P, sol = parts.filter(q => !q.userData.nc && !P.includes(q)), box = () => { const b = new THREE.Box3(); P.forEach(q => b.union(wb(q))); return b };
+                if (drvV == V) {
+                    const a = (K.a || K.arrowleft ? 1 : 0) - (K.d || K.arrowright ? 1 : 0), w = (K.w || K.arrowup ? 1 : 0) - (K.s || K.arrowdown ? 1 : 0); V.sp = Math.max(-.2, Math.min(.4, (V.sp + w * .012) * .985)); const O = V.s.position.clone(), an = a * V.sp * .14, qa = new THREE.Quaternion().setFromAxisAngle(AXW[1], an); P.forEach(q => { q.position.sub(O).applyAxisAngle(AXW[1], an).add(O); q.quaternion.premultiply(qa) });
+                    const f = new THREE.Vector3(0, 0, -1).applyQuaternion(V.s.quaternion); f.y = 0; f.normalize().multiplyScalar(V.sp); P.forEach(q => q.position.add(f)); const b = box(); b.min.y += .6; if (sol.some(q => wb(q).intersectsBox(b))) { P.forEach(q => q.position.sub(f)); V.sp *= -.3 }
+                    P.forEach(q => { if (q.userData.t == 'cyl') q.userData.box.rotation.y += V.sp * .8 })
+                }
+                const b = box(); let fl = 0; sol.forEach(q => { const c = wb(q); if (b.min.x < c.max.x && b.max.x > c.min.x && b.min.z < c.max.z && b.max.z > c.min.z && c.max.y <= b.min.y + .6) fl = Math.max(fl, c.max.y) });
+                V.v -= .02; let dy = V.v; if (b.min.y + dy < fl) { dy = fl - b.min.y; V.v = 0 } P.forEach(q => q.position.y += dy)
+            })
+        }
+        function mkMenu() {
+            const M = { File: [['Novo', () => $('nw').click()], ['Salvar', () => $('sv').click()], ['Abrir', () => $('op').click()], ['Sair', () => show('home')]], Edit: [['Duplicate', dup], ['Delete', del], ['Group', () => $('grp').click()], ['UnGroup', () => $('ung').click()], ['Girar 90° (R)', () => sel && rotSel(Math.PI / 2)]], Tools: [['Mover (1)', () => setMode(1)], ['Escalar (2)', () => setMode(2)], ['Girar (3)', () => setMode(3)]], Test: [['GO', startPlay], ['STOP', stopPlay]], Help: [['Controles e ajuda', openHelp]] };
+            $('mb').innerHTML = Object.keys(M).map(k => `<span class="mn">${k}<div class="dd">${M[k].map((x, i) => `<a data-m="${k}|${i}">${x[0]}</a>`).join('')}</div></span>`).join(''); $('mb').querySelectorAll('[data-m]').forEach(a => { const [k, i] = a.dataset.m.split('|'); a.onclick = () => M[k][i][1]() })
+        }
+        function carDef(c, t) { const w = t ? 2.3 : 1.8, L = t ? 2.3 : 1.6, a = [['brick', 0, 1.5, 0, t ? 4 : 3, 1, t ? 7 : 5, c, 0, 0, 0, 0, 1], ['seat', 0, 2.6, t ? 1.8 : .8, 2, 1.2, 2, '#333333', 0, 0, 0, 0, 1]]; if (t) a.push(['brick', 0, 2.3, -1.8, 3.6, .6, 3.5, '#da8541', 0, 0, 0, 0, 1]);[[-w, -L], [-w, L], [w, -L], [w, L]].forEach(q => a.push(['cyl', q[0], 1, q[1], 2, .6, 2, '#222222', 0, 0, 0, Math.PI / 2, 1])); return a }
+        LV.template = () => carDef('#0d69ac', 0); LV.truck = () => carDef('#f5cd30', 1);
+
+        let users = {}, cur = '', curPlace = '', clip = [], undo = [], chr = { main: '#c4281c', band: '#aaaaaa', arms: '#f5cd30', head: '#f5cd30' };
+        const esc = s => String(s).replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';'), hs = s => { let x = 5381; for (const c of s) x = (x * 33 ^ c.charCodeAt(0)) >>> 0; return x.toString(36) };
+        function loadU() { try { users = JSON.parse(localStorage.getItem('dyna_users') || '{}'); cur = localStorage.getItem('dyna_cur') || '' } catch (e) { } }
+        function saveU() { try { localStorage.setItem('dyna_users', JSON.stringify(users)); localStorage.setItem('dyna_cur', cur) } catch (e) { } }
+        function modal(t, b) { $('md').innerHTML = `<div class="win"><div class="wt"><span>${t}</span><b onclick="closeM()">✕</b></div><div class="wb">${b}</div></div>`; $('md').style.display = 'flex' }
+        function closeM() { $('md').style.display = 'none' }
+        function status() { $('tt').textContent = 'DynaBlocks Studio - [' + (curPlace || 'Untitled') + ']' + (cur ? ' - ' + cur : '') }
+        function spawnPos() { const s = parts.find(q => q.userData.t == 'spawn'); return s ? s.position.clone().add(new THREE.Vector3(0, 1.5, 0)) : new THREE.Vector3(0, 6, 12) }
+        function showLogin(t) { t = t || 0; modal('DynaBlocks - Log In', `<div class="tabs"><a onclick="showLogin(0)">Entrar</a><a onclick="showLogin(1)">Criar conta</a></div><label>Nome<input id="ln"></label><label>Senha<input id="lw" type="password"></label>${t ? '<label>Descrição<textarea id="ls" rows="3"></textarea></label>' : ''}<button onclick="doLogin(${t})">${t ? 'Criar conta' : 'Entrar'}</button> <button onclick="closeM()">Visitante</button><p id="le"></p>`) }
+        function doLogin(t) {
+            const n = $('ln').value.trim(), p = $('lw').value; if (!n || !p) { $('le').textContent = 'Preencha nome e senha.'; return }
+            if (t) { if (users[n]) { $('le').textContent = 'Esse nome já existe.'; return } users[n] = { p: hs(p), d: $('ls').value, places: {}, chr: { ...chr } } } else if (!users[n] || users[n].p != hs(p)) { $('le').textContent = 'Nome ou senha incorretos.'; return }
+            cur = n; chr = Object.assign({}, chr, users[n].chr); saveU(); closeM(); status()
+        }
+        function account() { if (!cur) { showLogin(0); return } const u = users[cur]; modal('Conta', `<p><b>${esc(cur)}</b></p><p>${esc(u.d || '(sem descrição)')}</p><p>${Object.keys(u.places).length} place(s) salvo(s)</p><button id="lo">Sair da conta</button>`); $('lo').onclick = () => { cur = ''; saveU(); closeM(); status() } }
+        function savePlace() { if (!cur) { showLogin(0); return } modal('Salvar Place', `<label>Nome do place<input id="pn" value="${esc(curPlace)}"></label><button onclick="doSave()">Salvar</button>`) }
+        function doSave() { const n = $('pn').value.trim(); if (!n) return; users[cur].places[n] = JSON.stringify(parts.map(ser1)); curPlace = n; saveU(); closeM(); status(); $('msg').textContent = 'Place salvo.' }
+        function openPlaces() {
+            if (!cur) { showLogin(0); return } const P = users[cur].places, ks = Object.keys(P); modal('Meus Places - ' + esc(cur), ks.length ? ks.map(k => `<div class="pl"><b>${esc(k)}</b><button data-a="p" data-n="${esc(k)}">Jogar</button><button data-a="e" data-n="${esc(k)}">Editar</button><button data-a="d" data-n="${esc(k)}">Apagar</button></div>`).join('') : '<p>Nenhum place salvo ainda. Use File &gt; Salvar Place.</p>');
+            $('md').querySelectorAll('[data-a]').forEach(b => b.onclick = () => { const n = b.dataset.n, a = b.dataset.a; if (a == 'd') { delete P[n]; saveU(); openPlaces(); return } stopPlay(); clear(); JSON.parse(P[n]).forEach(add); curPlace = n; closeM(); status(); if (a == 'p') startPlay() })
+        }
+        function drawPv() { const s = (l, t, w, hh, c, r) => `<i style="position:absolute;left:${l}px;top:${t}px;width:${w}px;height:${hh}px;background:${c};${r ? 'border-radius:50%' : ''}"></i>`; $('pv2').innerHTML = s(25, 0, 40, 40, chr.head, 1) + s(25, 38, 40, 26, chr.main) + s(25, 62, 40, 14, chr.band) + s(5, 38, 18, 38, chr.arms) + s(67, 38, 18, 38, chr.arms) + s(25, 76, 40, 40, chr.main) }
+        function showChar() {
+            const f = [['main', 'Corpo e pernas'], ['band', 'Faixa'], ['arms', 'Braços'], ['head', 'Cabeça']]; modal('Personagem', f.map(x => `<label>${x[1]} <input type="color" data-k="${x[0]}" value="${chr[x[0]]}"></label>`).join('') + '<div id="pv2"></div><button id="rc">Restaurar padrão (vermelho)</button>'); drawPv();
+            const sv = () => { if (cur) { users[cur].chr = { ...chr }; saveU() } drawPv() }; $('md').querySelectorAll('[data-k]').forEach(i => i.oninput = () => { chr[i.dataset.k] = i.value; sv() }); $('rc').onclick = () => { chr = { main: '#c4281c', band: '#aaaaaa', arms: '#f5cd30', head: '#f5cd30' }; sv(); showChar() }
+        }
+        function pushU() { const s = JSON.stringify(parts.map(ser1)); if (undo[undo.length - 1] !== s) { undo.push(s); if (undo.length > 60) undo.shift() } }
+        function undoOp() { if (playing) return; const s = undo.pop(); if (s) { clear(); JSON.parse(s).forEach(add) } }
+        function paste() { if (!clip.length || playing) return; pushU(); const g0 = gid++, n = clip.map(a => { a = a.slice(); a[1] += 2; a[3] += 2; a[12] = a[12] ? g0 : 0; return add(a) }); sels = n; sel = n[0]; hl(); gizmo() }
+        { const _i = ins, _d = del, _u = dup; ins = function () { if (playing) return; pushU(); _i() }; del = function () { if (playing) return; if (sels.length) pushU(); _d() }; dup = function () { if (playing) return; pushU(); _u() } }
+        function special() { const p = ch.position, b = new THREE.Box3(new THREE.Vector3(p.x - .8, p.y, p.z - .8), new THREE.Vector3(p.x + .8, p.y + 5, p.z + .8)); parts.forEach(q => { const t = q.userData.t; if ((t == 'fire' || t == 'magic') && wb(q).intersectsBox(b)) { if (t == 'fire') { p.copy(spawnPos()); vy = 0 } else vy = .9 } }) }
+        function anim() { const t = performance.now() / 1000; parts.forEach((q, i) => { const u = q.userData; if (u.t == 'fire' && u.box) u.box.scale.set(1 + .12 * Math.sin(t * 18 + i), 1 + .18 * Math.sin(t * 23 + i * 2), 1 + .12 * Math.cos(t * 17 + i)); else if (u.t == 'magic' && u.orb) u.orb.forEach((k, j) => { const a = t * 2.5 + j * 2.09, r = u.s[0] * .8; k.position.set(Math.cos(a) * r, Math.sin(t * 3 + j) * .6, Math.sin(a) * r) }); else if (u.t == 'spin' && playing) q.rotation.y += .03 }) }
+        function mkPopup() { $('pp').innerHTML = Object.keys(CAT).map(k => `<div class="row"><b>${k}</b>${CAT[k].map((x, i) => `<a data-c="${k}" data-i="${i}">${x[0]}</a>`).join('')}</div>`).join(''); $('pp').querySelectorAll('[data-c]').forEach(a => a.onclick = () => { cat = a.dataset.c; ci = +a.dataset.i; upd(); ins() }); $('pm').onclick = () => { $('pp').style.display = $('pp').style.display == 'block' ? 'none' : 'block' } }
+        function mkMenu() {
+            const M = { File: [['Novo', () => { stopPlay(); clear(); curPlace = ''; status() }], ['Salvar Place', savePlace], ['Meus Places', openPlaces], ['Modelo: Carro', () => openStudio('template')], ['Modelo: Caminhão', () => openStudio('truck')], ['Modelo: Puzzle', () => openStudio('puzzle')], ['Conta / Log in', account], ['Voltar ao início', goHome], ['Personagem...', showChar]], Edit: [['Desfazer (Ctrl+Z)', undoOp], ['Copiar (Ctrl+C)', () => clip = sels.map(ser1)], ['Colar (Ctrl+V)', paste], ['Duplicar (Ctrl+D)', dup], ['Agrupar (Ctrl+U)', () => $('grp').click()], ['Desagrupar', () => $('ung').click()], ['Excluir (Backspace)', del], ['Girar 90° (R)', () => sel && rotSel(Math.PI / 2)]], Tools: [['Mover (1)', () => setMode(1)], ['Escalar (2)', () => setMode(2)], ['Girar (3)', () => setMode(3)]], Test: [['GO', startPlay], ['STOP', stopPlay]] };
+            $('mb').innerHTML = Object.keys(M).map(k => `<span class="mn">${k}<div class="dd">${M[k].map((x, i) => `<a data-m="${k}|${i}">${x[0]}</a>`).join('')}</div></span>`).join(''); $('mb').querySelectorAll('[data-m]').forEach(a => { const [k, i] = a.dataset.m.split('|'); a.onclick = () => M[k][i][1]() });
+            $('sv').onclick = savePlace; $('op').onclick = openPlaces; $('acc').onclick = account; $('avt').onclick = showChar; mkPopup(); mkTouch()
+        }
+        loadU(); if (cur && users[cur] && users[cur].chr) chr = Object.assign({}, chr, users[cur].chr); status();
+        function goHome() { stopPlay(); $('studio').style.display = 'none'; $('home').style.display = 'block' }
+
+        function showLogin(t) { openAcct(t) }
+        function account() { openAcct(0) }
+        function showChar() { openAcct(0) }
+        function openAcct(t) { stopPlay(); closeM(); $('home').style.display = 'none'; $('studio').style.display = 'none'; $('acct').style.display = 'block'; drawAcct(t || 0) }
+        function resumeStudio() { $('acct').style.display = 'none'; $('home').style.display = 'none'; $('studio').style.display = 'flex'; init(); status() }
+        function goHome() { stopPlay(); $('studio').style.display = 'none'; $('acct').style.display = 'none'; $('home').style.display = 'block' }
+        function doLogin(t) {
+            const n = $('ln').value.trim(), p = $('lw').value; if (!n || !p) { $('le').textContent = 'Preencha nome e senha.'; return }
+            if (t) { if (users[n]) { $('le').textContent = 'Esse nome já existe.'; return } users[n] = { p: hs(p), d: $('ls').value, places: {}, chr: { ...chr } } } else if (!users[n] || users[n].p != hs(p)) { $('le').textContent = 'Nome ou senha incorretos.'; return }
+            cur = n; chr = Object.assign({}, chr, users[n].chr); saveU(); status(); drawAcct(0)
+        }
+        function drawAcct(t) {
+            const u = cur && users[cur]; $('ab').innerHTML = u ? `<h4>Conta</h4><div><b>${esc(cur)}</b></div><div style="margin:6px 0">${esc(u.d || '(sem descrição)')}</div><div>${Object.keys(u.places).length} place(s) salvo(s)</div><p><button id="lo">Sair da conta</button> <button onclick="openPlaces()">Meus Places</button></p>` : `<h4><a onclick="drawAcct(0)">Log In</a> | <a onclick="drawAcct(1)">Criar conta</a></h4><label>Nome<input id="ln"></label><label>Senha<input id="lw" type="password"></label>${t ? '<label>Descrição<textarea id="ls" rows="3"></textarea></label>' : ''}<button onclick="doLogin(${t})">${t ? 'Criar conta' : 'Entrar'}</button><p id="le"></p>`;
+            if (u) $('lo').onclick = () => { cur = ''; saveU(); status(); drawAcct(0) }; drawChar()
+        }
+        function drawChar() {
+            const f = [['main', 'Corpo e pernas'], ['band', 'Faixa'], ['arms', 'Braços'], ['head', 'Cabeça']]; $('cb').innerHTML = f.map(x => `<label>${x[1]} <input type="color" data-k="${x[0]}" value="${chr[x[0]]}" style="display:inline-block;width:48px;height:22px"></label>`).join('') + '<div id="pv2"></div><button id="rc">Restaurar padrão (vermelho)</button>' + (cur ? '' : '<p>Entre numa conta para salvar o personagem.</p>'); drawPv();
+            const sv = () => { if (cur) { users[cur].chr = { ...chr }; saveU() } drawPv() }; $('cb').querySelectorAll('[data-k]').forEach(i => i.oninput = () => { chr[i.dataset.k] = i.value; sv() }); $('rc').onclick = () => { chr = { main: '#c4281c', band: '#aaaaaa', arms: '#f5cd30', head: '#f5cd30' }; sv(); drawChar() }
+        }
+
+        let bak = '[]', back = 'home';
+        function hideAll() { ['home', 'acct', 'pg', 'studio'].forEach(x => $(x).style.display = 'none') }
+        function gameMode(on) { $('studio').classList.toggle('gm', on); if (R) rs() }
+        function enterStudio() { hideAll(); $('studio').style.display = 'flex'; init(); status(); gameMode(0) }
+        function resumeStudio() { enterStudio() }
+        function goHome() { stopPlay(); hideAll(); $('home').style.display = 'block' }
+        function openAcct(t) { stopPlay(); hideAll(); $('acct').style.display = 'block'; drawAcct(t || 0) }
+        function openPage(t, b) { stopPlay(); hideAll(); $('pg').innerHTML = document.querySelector('#home .logo').outerHTML + `<div class="cols"><div class="c" style="width:360px"><h4>${t}</h4>${b}</div></div><div class="foot"><a onclick="goHome()">&laquo; DynaBlocks.com</a><a onclick="enterStudio()">Go to Studio</a></div>`; $('pg').style.display = 'block' }
+        function openPlaces() {
+            if (!cur) { openAcct(0); return } const P = users[cur].places, ks = Object.keys(P); openPage('Meus Places - ' + esc(cur), ks.length ? ks.map(k => `<div class="pl"><b>${esc(k)}</b><button data-a="p" data-n="${esc(k)}">Jogar</button><button data-a="e" data-n="${esc(k)}">Editar</button><button data-a="d" data-n="${esc(k)}">Apagar</button></div>`).join('') : '<p>Nenhum place salvo ainda.</p>');
+            $('pg').querySelectorAll('[data-a]').forEach(b => b.onclick = () => { const n = b.dataset.n, a = b.dataset.a; if (a == 'd') { delete P[n]; saveU(); openPlaces(); return } const arr = JSON.parse(P[n]); if (a == 'p') playData(arr, 'plc'); else { openStudio('scratch'); arr.forEach(add); curPlace = n; status() } })
+        }
+        function savePlace() { if (!cur) { openAcct(0); return } openPage('Salvar Place', `<label>Nome do place<input id="pn" value="${esc(curPlace)}"></label><button onclick="doSave()">Salvar</button>`) }
+        function doSave() { const n = $('pn').value.trim(); if (!n) return; users[cur].places[n] = JSON.stringify(parts.map(ser1)); curPlace = n; saveU(); enterStudio(); $('msg').textContent = 'Place salvo.' }
+        function playData(arr, b) { bak = R ? JSON.stringify(parts.map(ser1)) : '[]'; back = b; openStudio('scratch'); arr.forEach(add); gameMode(1); startPlay() }
+        function playGame(k) { playData(LV[k](), 'home') }
+        function exitGame() { stopPlay(); gameMode(0); clear(); JSON.parse(bak).forEach(add); back == 'plc' ? openPlaces() : goHome() }
+
+        function openHelp() {
+            openPage('Ajuda - controles, opções e funcionamento', `
+<p><b>Visão geral</b></p><ul><li><b>Página inicial:</b> <i>Make a place</i> abre um estúdio novo; <i>Go to Studio</i> volta ao estúdio com o que você já construiu; <i>Log In...</i> abre a conta; <i>saved games</i> abre seus places; os dois cartões são jogos prontos (o Dump Truck é dirigível).</li><li><b>Estúdio</b> é a única tela de construção. As demais telas (conta, places, salvar, ajuda e jogo) são páginas próprias.</li></ul>
+<p><b>Conta e personagem</b></p><ul><li>Crie a conta com nome, senha e descrição, ou entre numa existente. Sem conta você constrói e joga, mas não salva places.</li><li>Na mesma página você muda as cores do corpo e pernas (padrão vermelho), faixa, braços e cabeça. Com conta, as cores ficam salvas.</li><li>Tudo é guardado só neste navegador, sem servidor. A senha usa um hash simples, então não é segurança real.</li></ul>
+<p><b>Câmera no estúdio</b></p><ul><li><b>Botão direito + arrastar:</b> gira a câmera (o esquerdo nunca move a câmera).</li><li><b>Roda do mouse:</b> zoom. <b>W/A/S/D:</b> voa para onde a câmera olha. <b>Q/E:</b> desce/sobe. <b>Shift:</b> mais rápido.</li><li>Painel <i>CameraMenu</i> (direita): girar, zoom, andar para os lados e centralizar (◉). Segure o botão para repetir.</li></ul>
+<p><b>Selecionar</b></p><ul><li><b>Clique</b> numa peça para selecionar; <b>Shift+clique</b> soma à seleção.</li><li><b>Segure o botão esquerdo e arraste</b> no vazio para desenhar um retângulo e selecionar várias peças.</li><li>Peças agrupadas são selecionadas juntas.</li></ul>
+<p><b>Mover, escalar e girar</b></p><ul><li>Teclas <b>1</b> (mover), <b>2</b> (escalar), <b>3</b> (girar) ou os ícones do painel esquerdo.</li><li><b>Mover:</b> setas coloridas nos eixos (de 1 em 1). <b>Escalar:</b> cubos nas duas pontas de cada eixo (de 0,5 em 0,5). <b>Girar:</b> anéis por eixo (passos de 15°). A tecla <b>R</b> gira 90° no eixo vertical.</li><li>Mover e girar valem para toda a seleção.</li></ul>
+<p><b>Painel esquerdo</b></p><ul><li><b>GO/STOP:</b> testa o place e volta tudo ao lugar ao parar. <b>Group/UnGroup</b>, <b>Duplicate</b>, <b>DELETE</b>.</li><li><b>Seletor de cor:</b> pinta a seleção e define a cor das próximas peças. <b>Anchor:</b> fixa a peça (sem Anchor, ela cai no teste).</li><li><b>Salvar, Places, Conta, Avatar:</b> abrem as páginas correspondentes.</li></ul>
+<p><b>Celular e telas de toque</b></p><ul><li><b>Dois dedos:</b> arrastar gira a câmera e pinçar dá zoom (no jogo, um dedo arrastando já gira a câmera).</li><li><b>Um dedo:</b> toque seleciona; arrastar no vazio faz o retângulo de seleção; arrastar as alças move, escala e gira.</li><li><b>Botões na tela (estúdio):</b> setas ▲▼◀▶ voam, ⤒ sobe e ⤓ desce; ↩ desfaz, ⧉ copia, 📋 cola e ⟳90 gira 90°. Group, Duplicate, DELETE, cor e Anchor ficam no painel esquerdo.</li><li><b>Botões na tela (jogo):</b> setas andam, ⤴ pula e E entra e sai do carro.</li></ul><p><b>Atalhos</b></p><ul><li><b>Ctrl+Z</b> desfaz; <b>Ctrl+C</b> copia; <b>Ctrl+V</b> cola; <b>Ctrl+D</b> duplica; <b>Ctrl+U</b> agrupa; <b>Backspace</b> ou <b>Delete</b> apaga.</li></ul>
+<p><b>Menus do estúdio</b></p><ul><li><b>File:</b> novo, salvar place, meus places, modelos prontos (carro, caminhão, puzzle), conta, personagem, voltar ao início. <b>Edit:</b> desfazer, copiar, colar, duplicar, agrupar, desagrupar, excluir, girar. <b>Tools:</b> mover, escalar, girar. <b>Test:</b> GO e STOP. <b>Help:</b> esta página.</li></ul>
+<p><b>Menu de partes (▲ Partes, na barra amarela)</b></p><ul><li>Uma linha por categoria; clique numa peça para colocá-la no mundo, sobre o chão ou sobre outras peças: <i>Bricks, Plates, Cylinders, Spheres, Wheels, Seats, Spawns, Fires, Magics, Spinners, Characters</i>.</li><li>Bricks e Plates têm studs e bordas arredondadas.</li></ul>
+<p><b>Peças com função</b></p><ul><li><b>Spawn:</b> onde o personagem nasce e renasce. <b>Fire:</b> queima, e o personagem volta ao Spawn. <b>Magic:</b> lança o personagem para cima. <b>Spinner:</b> gira sozinho no teste. <b>Seat:</b> cadeira para dirigir veículos. <b>Characters:</b> bonecos parados de enfeite.</li></ul>
+<p><b>Carros dirigíveis</b></p><ul><li>Monte um chassi (Brick), um <b>Seat</b> e quatro <b>Wheels</b>, e junte tudo com <b>Group</b>. A frente do carro é o lado oposto ao encosto do Seat.</li><li>Com GO, chegue perto do Seat e aperte <b>E</b> para entrar e sair. Dirija com <b>W/A/S/D</b> ou as setas.</li></ul>
+<p><b>Jogar</b></p><ul><li>Na tela de jogo: <b>W/A/S/D</b> ou setas andam, <b>Espaço</b> pula, <b>botão direito + arrastar</b> gira a câmera, <b>E</b> entra e sai de veículos. <b>Sair do jogo</b> volta à página anterior sem perder o que estava no estúdio.</li></ul>
+<p><b>Places</b></p><ul><li>Logado, use <i>File &gt; Salvar Place</i> ou o botão <i>Salvar</i>. Em <i>Meus Places</i> você escolhe <b>Jogar</b>, <b>Editar</b> ou <b>Apagar</b>.</li></ul>`); $('pg').querySelector('.c').style.width = '640px'
+        }
+
+        const tp = new Map(); let gs = null;
+        function tdown(e) { if (e.pointerType != 'touch') return 0; tp.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (tp.size == 2) { dn = null; $('mq').style.display = 'none'; const [a, b] = [...tp.values()]; gs = { d: Math.hypot(a.x - b.x, a.y - b.y), x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; return 1 } return tp.size > 1 }
+        function tmove(e) { if (e.pointerType != 'touch' || !tp.has(e.pointerId)) return 0; tp.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (tp.size < 2 || !gs) return 0; const [a, b] = [...tp.values()], d = Math.hypot(a.x - b.x, a.y - b.y), x = (a.x + b.x) / 2, y = (a.y + b.y) / 2; dist = Math.max(1, Math.min(300, dist * gs.d / Math.max(d, 1))); yaw -= (x - gs.x) * .01; pit = Math.max(-1.5, Math.min(1.5, pit + (y - gs.y) * .01)); gs = { d, x, y }; return 1 }
+        function tup(e) { if (e.pointerType != 'touch') return 0; const m = tp.size > 1; tp.delete(e.pointerId); if (tp.size < 2) gs = null; if (m) { dn = null; return 1 } return 0 }
+        function mkTouch() {
+            document.querySelectorAll('#tc [data-k]').forEach(b => { const k = b.dataset.k; b.onpointerdown = e => { e.preventDefault(); K[k] = 1 }; b.onpointerup = b.onpointerleave = b.onpointercancel = () => K[k] = 0 });
+            $('ee').onpointerdown = e => { e.preventDefault(); if (playing) toggleDrive() }; $('tu').onclick = undoOp; $('tcp').onclick = () => clip = sels.map(ser1); $('tpv').onclick = paste; $('tr').onclick = () => sel && rotSel(Math.PI / 2); cv.onpointercancel = e => { tp.delete(e.pointerId); gs = null; dn = null }
+        }
+        document.addEventListener('click', e => { const m = e.target.closest && e.target.closest('.mn'); document.querySelectorAll('.mn.op').forEach(x => { if (x != m) x.classList.remove('op') }); if (m && !e.target.closest('.dd')) m.classList.toggle('op'); else if (m) m.classList.remove('op') });
+        if (matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window) { document.body.classList.add('touch'); window.TOUCH = 1 }
+        onblur = () => { for (const k in K) K[k] = 0 };
+    </script>
+</body>
+
+</html>
